@@ -25,6 +25,7 @@ st.markdown("""
 st.markdown("""
     <h1 style="text-align: center;">🔐 Cryptonova </h1>
     <p style="text-align: center; font-size: 18px;">
+        The Next Generation Encryption and Steganography System<br>
         Securely embed and extract messages from images using QR codes.
     </p>
     <p style="text-align: center; font-size: 16px;">
@@ -42,6 +43,9 @@ if 'show_encrypt_result' not in st.session_state:
     st.session_state.show_encrypt_result = False
 if 'show_decrypt_result' not in st.session_state:
     st.session_state.show_decrypt_result = False
+
+cloud = st.toggle("☁️ Use Cloud Mode", value=True)
+
 
 tab1, tab2 = st.tabs(["🔐 Encrypt", "🔓 Decrypt"])
 
@@ -72,36 +76,56 @@ with tab1:
                 
 
                 st.info("Running encryption + stego encoding…")
-                stego_img, qr_img = master_encrypt(
-                    plaintext,
-                    cover_image_path=tmp_cover.name,
-                    output_path="stego.png",
-                    output_qr_code_path="qr.png"
-                )
+                if cloud:
+                    stego_img, qr_img = master_encrypt(
+                        plaintext,
+                        cover_image_path=tmp_cover.name,
+                        output_path="stego.png",
+                        output_qr_code_path="qr.png"
+                    )
+                else:
+                    stego_img, qr_img = master_encrypt(
+                        plaintext,
+                        cover_image_path=tmp_cover.name,
+                        output_path="stego.png",
+                        cloud_upload=False
+                    )
 
 
                 elapsed = time.time() - start_time
                 st.markdown(f"⏱️ **Encryption time:** `{elapsed:.3f} seconds`")  # 👈 shows up on the page
+                if cloud:
+                    st.session_state.stego_rgb = cv2.cvtColor(stego_img, cv2.COLOR_BGR2RGB)
+                    st.session_state.qr_rgb = cv2.cvtColor(qr_img, cv2.COLOR_BGR2RGB)
+                    st.session_state.stego_buf = cv2.imencode(".png", stego_img)[1].tobytes()
+                    st.session_state.qr_buf = cv2.imencode(".png", qr_img)[1].tobytes()
+                    st.session_state.show_encrypt_result = True
 
-                st.session_state.stego_rgb = cv2.cvtColor(stego_img, cv2.COLOR_BGR2RGB)
-                st.session_state.qr_rgb = cv2.cvtColor(qr_img, cv2.COLOR_BGR2RGB)
-                st.session_state.stego_buf = cv2.imencode(".png", stego_img)[1].tobytes()
-                st.session_state.qr_buf = cv2.imencode(".png", qr_img)[1].tobytes()
-                st.session_state.show_encrypt_result = True
+                else:
+                    st.session_state.stego_rgb = cv2.cvtColor(stego_img, cv2.COLOR_BGR2RGB)
+                    st.session_state.stego_buf = cv2.imencode(".png", stego_img)[1].tobytes()
+                    st.session_state.show_encrypt_result = True
 
     if st.session_state.show_encrypt_result:
-        col_img1, col_img2 = st.columns([3, 1])  # Adjusted column widths
-        with col_img1:
-            st.markdown("#### 🖼️ Stego Image")
-            st.image(st.session_state.stego_rgb, width=600)
-            st.download_button("⬇️ Download Stego Image", st.session_state.stego_buf, "stego.png", "image/png")
-        with col_img2:
-            st.markdown("#### 📶 QR Code")
-            st.image(st.session_state.qr_rgb, width=350)
-            st.download_button("⬇️ Download QR Code", st.session_state.qr_buf, "qr.png", "image/png")
-    
-        st.markdown("---")
-        st.button("🔁 Start Over", on_click=lambda: st.session_state.update(show_encrypt_result=False))
+        if cloud: 
+            col_img1, col_img2 = st.columns([3, 1])  # Adjusted column widths
+            with col_img1:
+                st.markdown("#### 🖼️ Stego Image")
+                st.image(st.session_state.stego_rgb, width=600)
+                st.download_button("⬇️ Download Stego Image", st.session_state.stego_buf, "stego.png", "image/png")
+            with col_img2:
+                st.markdown("#### 📶 QR Code")
+                st.image(st.session_state.qr_rgb, width=350)
+                st.download_button("⬇️ Download QR Code", st.session_state.qr_buf, "qr.png", "image/png")
+
+            st.markdown("---")
+            st.button("🔁 Start Over", on_click=lambda: st.session_state.update(show_encrypt_result=False))
+        else:
+            col_img1, col_img2 = st.columns([3, 1])  # Adjusted column widths
+            with col_img1:
+                st.markdown("#### 🖼️ Stego Image")
+                st.image(st.session_state.stego_rgb, width=600)
+                st.download_button("⬇️ Download Stego Image", st.session_state.stego_buf, "stego.png", "image/png")
 
 
 
@@ -122,10 +146,17 @@ with tab2:
                     tmp_qr.write(qr_input.getvalue())
                     tmp_qr.flush(); tmp_qr.close()
 
-                    st.info("Reading QR, downloading stego image, extracting & decrypting…")
-                    secret = master_decrypt(input_data=tmp_qr.name)
-                    st.session_state.decrypted_text = secret
-                    st.session_state.show_decrypt_result = True
+                    if cloud:
+                        st.info("Reading QR, downloading stego image, extracting & decrypting…")
+                        secret = master_decrypt(input_data=tmp_qr.name)
+                        st.session_state.decrypted_text = secret
+                        st.session_state.show_decrypt_result = True
+                
+                    else:
+                        st.info("Reading image, extracting & decrypting…")
+                        secret = master_decrypt(input_data=tmp_qr.name, qr=False)
+                        st.session_state.decrypted_text = secret
+                        st.session_state.show_decrypt_result = True
                 except Exception as e:
                     st.error(f"Failed to decrypt: {e}")
 
