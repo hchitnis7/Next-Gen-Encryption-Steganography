@@ -30,8 +30,8 @@ import cv2
 from datetime import datetime 
 import CloudQRHandler as cloudthing
 
-credentials_path = "/teamspace/studios/this_studio/project_dir/logical-factor-455520-m8-2405e5b6a50c.json"
-bucket_name = "dctimages"
+credentials_path = "/teamspace/studios/this_studio/project_dir/cryptonovademo-d887db293060.json"
+bucket_name = "cryptonova"
 # Create a CloudQRHandler object
 cloud_handler = cloudthing.CloudQRHandler(credentials_path, bucket_name)
 
@@ -144,7 +144,7 @@ def xor_decrypt(final_encrypted_string):
 
 
 def master_encrypt(plaintext, cover_image_path = 'lena2.png', output_path = 'encoded_image.png',
-                 output_qr_code_path = 'qr_code.png', display=False):
+                 output_qr_code_path = 'qr_code.png', display=False, cloud_upload=False):
     """Encrypts a message using NTRU, AES, and XOR, then outputs a final encrypted string."""
     
     # NTRU Encryption
@@ -177,47 +177,59 @@ def master_encrypt(plaintext, cover_image_path = 'lena2.png', output_path = 'enc
     encoded_img = dct.encode_image(img, xor_encrypted)  # Embeds bytes directly
     # encoded_img = embed_message(img,xor_encrypted)
     cv2.imwrite(output_path, encoded_img)
-    blob_name = output_path + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # payload_image = encoded_image
-    public_url = cloud_handler.upload_file(output_path, blob_name)
-    cloud_handler.generate_qr_code(public_url, output_qr_code_path)
-    qr_code_img = cv2.imread(output_qr_code_path)
+    # print(f"Encoded image saved to {output_path}")
+    if cloud_upload == True:
+        blob_name = output_path + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        public_url = cloud_handler.upload_file(output_path, blob_name)
+        cloud_handler.generate_qr_code(public_url, output_qr_code_path)
+        qr_code_img = cv2.imread(output_qr_code_path)
+    else:
+        blob_name = None
+        public_url = None
+        qr_code_img = None
+        if display:
+            encoded_img_rgb = cv2.cvtColor(encoded_img, cv2.COLOR_BGR2RGB)
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            if qr_code_img is not None:
 
-    # if display:
-    #     # Read images using OpenCV
-    #     qr_code_img = cv2.imread(output_qr_code_path)
-    #     qr_code_img = cv2.cvtColor(qr_code_img, cv2.COLOR_BGR2RGB)
+                qr_code_rgb = cv2.cvtColor(qr_code_img, cv2.COLOR_BGR2RGB)
 
-    #     encoded_img_rgb = cv2.cvtColor(encoded_img, cv2.COLOR_BGR2RGB)
-    #     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                plt.figure(figsize=(15, 5))
+                plt.subplot(1, 3, 1)
+                plt.imshow(qr_code_rgb)
+                plt.title("QR Code")
+                plt.axis('off')
 
-    #     # Plot images using matplotlib
-    #     plt.figure(figsize=(15, 5))
+                plt.subplot(1, 3, 2)
+                plt.imshow(encoded_img_rgb)
+                plt.title("Encoded Image")
+                plt.axis('off')
 
-    #     plt.subplot(1, 3, 1)
-    #     plt.imshow(qr_code_img)
-    #     plt.title("QR Code")
-    #     plt.axis('off')
+                plt.subplot(1, 3, 3)
+                plt.imshow(img_rgb)
+                plt.title("Cover Image")
+                plt.axis('off')
+            else:
+                plt.figure(figsize=(10, 5))
+                plt.subplot(1, 2, 1)
+                plt.imshow(encoded_img_rgb)
+                plt.title("Encoded Image")
+                plt.axis('off')
 
-    #     plt.subplot(1, 3, 2)
-    #     plt.imshow(encoded_img_rgb)
-    #     plt.title("Encoded Image")
-    #     plt.axis('off')
+                plt.subplot(1, 2, 2)
+                plt.imshow(img_rgb)
+                plt.title("Cover Image")
+                plt.axis('off')
 
-    #     plt.subplot(1, 3, 3)
-    #     plt.imshow(img_rgb)
-    #     plt.title("Cover Image")
-    #     plt.axis('off')
-
-    #     plt.tight_layout()
-    #     plt.show()
+        plt.tight_layout()
+        plt.show()
     
     return encoded_img, qr_code_img
 
 
 
 # Master decryption function
-def master_decrypt(input_data=None, downloaded_file_path = 'downloaded_file.png'):
+def master_decrypt(input_data=None, downloaded_file_path = 'downloaded_file.png', qr = True):
     """
     Decrypts the given input data using XOR, AES, and NTRU decryption.
     
@@ -227,11 +239,17 @@ def master_decrypt(input_data=None, downloaded_file_path = 'downloaded_file.png'
     Returns:
     - str: The original decrypted message.
     """
-    decoded_url = cloud_handler.read_qr_code(input_data)
-    cloud_handler.download_file(decoded_url, downloaded_file_path)
+    if qr == True:
+        # Read the QR code image
+        # qr_img = cv2.imread(input_data)
+        # Decode the QR code
+        decoded_url = cloud_handler.read_qr_code(input_data)
+        cloud_handler.download_file(decoded_url, downloaded_file_path)
+        img = cv2.imread(downloaded_file_path)  
 
+    else:
+        img = cv2.imread(input_data)
     # Extract encrypted text from the stego image
-    img = cv2.imread(downloaded_file_path)  
     dct = IWT_FAST.IWT()
     final_encrypted_string = dct.decode_image(img)  # This now returns a plain string
     # final_encrypted_string = extract_message(img)
