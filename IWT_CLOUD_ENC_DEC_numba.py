@@ -41,7 +41,7 @@ cloud_handler = cloudthing.CloudQRHandler(credentials_path, bucket_name)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LATENT_DIM = 1024
 BATCH_SIZE = 32
-MODEL_PATH_G = "/teamspace/studios/this_studio/expanded_generator_dcgan_9CHAN_GPT.pth"
+MODEL_PATH_G = "expanded_generator_dcgan_9CHAN_GPT.pth"
 # Tolerance for smart randomisation (mode frequency must be within ±20% of average)
 TOLERANCE = 0.45
 
