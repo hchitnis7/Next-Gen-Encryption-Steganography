@@ -19,10 +19,10 @@ import cv2
 import base64
 import time
 import matplotlib.pyplot as plt
-import CHAOSDCGAN as cdc
+import CHAOSDCGAN_UPDATED as cdc
 import torch
 import secrets
-import IWT_FAST 
+import IWT_FAST_3CHANNEL as IWT_FAST
 import base64
 from Crypto.Cipher import AES
 import time
@@ -41,7 +41,7 @@ cloud_handler = cloudthing.CloudQRHandler(credentials_path, bucket_name)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LATENT_DIM = 1024
 BATCH_SIZE = 32
-MODEL_PATH_G = "expanded_generator_dcgan_9CHAN_GPT.pth"
+MODEL_PATH_G = "/teamspace/studios/this_studio/expanded_generator_dcgan.pth"
 # Tolerance for smart randomisation (mode frequency must be within ±20% of average)
 TOLERANCE = 0.45
 
