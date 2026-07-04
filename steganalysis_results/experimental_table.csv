@@ -1,0 +1,4 @@
+Dataset,Resolution,Color Space,Channels Embedded,Payload Size (bits),Embedding Rate (bpp),Samples (per class),Trials,CV Folds,PE (mean ± std),Accuracy (mean ± std),AUC (mean ± std),PSNR dB (mean ± std),SSIM (mean ± std)
+ALASKA#2 (uncompressed color),512×512,Native RGB (uncompressed PPM),B + G + R (3 / 3),"26,144",0.1,100,10,5,0.7775 ± 0.0198,0.2225 ± 0.0198,0.1719 ± 0.0187,58.90 ± 8.03,0.999552 ± 0.002251
+ALASKA#2 (uncompressed color),512×512,Native RGB (uncompressed PPM),B + G + R (3 / 3),"52,360",0.2,100,10,5,0.6585 ± 0.0127,0.3415 ± 0.0127,0.3462 ± 0.0192,55.70 ± 8.00,0.999304 ± 0.002600
+ALASKA#2 (uncompressed color),512×512,Native RGB (uncompressed PPM),B + G + R (3 / 3),"104,792",0.4,100,10,5,0.4900 ± 0.0147,0.5100 ± 0.0147,0.5675 ± 0.0158,52.11 ± 8.27,0.998610 ± 0.004169

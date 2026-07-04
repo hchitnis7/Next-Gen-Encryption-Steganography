@@ -3,3 +3,13 @@ __pycache__/
 *.pyo
 *.nbc
 *.nbi
+
+# Python bytecode cache
+__pycache__/
+*.pyc
+
+# Numba cache artifacts
+*.nbi
+*.nbc
+
+/teamspace/studios/this_studio/Next-Gen-Encryption-Steganography/steganalysis_results/stego_temp/*.png
