@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-IWT_CLOUD_ENC_DEC_numba.py
+IWT_CLOUD_ENC_DEC_numba_key_encap.py
 
 Implements the full hybrid encryption-steganography pipeline:
 
