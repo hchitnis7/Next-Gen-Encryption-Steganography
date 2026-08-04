@@ -51,7 +51,7 @@ LATENT_DIM   = 1024
 NUM_CHANNELS = 6
 NGF          = 64
 BATCH_SIZE   = 32
-MODEL_PATH_G = "expanded_generator_dcgan.pth"
+MODEL_PATH_G = "./expanded_generator_dcgan.pth"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Architecture building blocks
