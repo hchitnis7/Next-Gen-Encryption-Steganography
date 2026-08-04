@@ -13,5 +13,5 @@ __pycache__/
 *.nbc
 
 /teamspace/studios/this_studio/Next-Gen-Encryption-Steganography/steganalysis_results/stego_temp/*.png
-/teamspace/studios/this_studio/Next-Gen-Encryption-Steganography/steganalysis_results_v2/stego_temp/*.png
+/teamspace/studios/this_studio/Next-Gen-Encryption-Steganography/steganalysis_results_v2/stego_temp/*
 /teamspace/studios/this_studio/Next-Gen-Encryption-Steganography/tmp/*
