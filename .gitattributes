@@ -1,2 +1,4 @@
 *pkl filter=lfs diff=lfs merge=lfs -text
 *.pkl filter=lfs diff=lfs merge=lfs -text
+expanded_generator_dcgan.pth filter=lfs diff=lfs merge=lfs -text
+expanded_discriminator_dcgan.pth filter=lfs diff=lfs merge=lfs -text
