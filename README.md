@@ -54,7 +54,7 @@ The critical security property: **an attacker who intercepts the stego image get
 
 ## System Architecture
 
-![System Architecture](https://github.com/hchitnis7/Next-Gen-Encryption-Steganography/edit/main/README.md)
+![System Architecture](https://github.com/hchitnis7/Next-Gen-Encryption-Steganography/blob/main/UPDATED%20SYSTEM%20ARCHITECTURE.png)
 
 The full pipeline operates across two separate channels:
 
@@ -91,7 +91,7 @@ DECRYPTION (receiver):
 
 ## GAN Architecture
 
-![GAN Architecture](https://github.com/hchitnis7/Next-Gen-Encryption-Steganography/edit/main/README.md))
+![GAN Architecture](https://github.com/hchitnis7/Next-Gen-Encryption-Steganography/blob/main/UPDATED%20GAN%20ARCHITECTURE.png)
 
 The GAN is used exclusively to generate high-entropy byte sequences that serve as session key material. It is **not** used for steganographic embedding.
 
