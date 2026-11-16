@@ -1,0 +1,38 @@
+# Next-Gen-Encryption-Steganography - CPU-only environment
+# Install:
+#   conda create -n stego python=3.11 -y
+#   conda activate stego
+#   pip install -r requirements.txt
+# The first line makes pip take the CPU-only build of PyTorch (no CUDA download).
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# core numerics / deep learning
+torch
+numpy
+scipy
+pandas
+scikit-learn
+scikit-image
+numba
+
+# images, plots
+opencv-python
+Pillow
+matplotlib
+
+# cryptography
+pycryptodome
+pq-ntru
+
+# QR codes, cloud storage, GUI
+qrcode
+pyzbar
+requests
+google-cloud-storage
+streamlit
+
+# utilities, notebooks
+tqdm
+tabulate
+notebook
+ipykernel
