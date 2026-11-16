@@ -231,7 +231,7 @@ def _cdf_quantise_and_shuffle(images: list, target_bytes: int) -> bytes:
     # Rank transform: argsort twice gives the rank of each element
     ranks = np.argsort(np.argsort(all_values))
     n = len(ranks)
-    byte_values = (ranks / (n - 1) * 255).astype(np.uint8)
+    byte_values = (ranks * 256 // n).astype(np.uint8)
 
     # Cryptographic shuffle — seed from os.urandom so it's not predictable
     rng = np.random.default_rng(
